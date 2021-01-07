@@ -28,7 +28,7 @@ impl<'a> RasterBand<'a> {
     ///
     /// # Safety
     /// This method operates on a raw C pointer
-    pub unsafe fn from_c_rasterband<T>(_: &'a T, c_rasterband: GDALRasterBandH) -> Self {
+    pub unsafe fn from_c_rasterband(c_rasterband: GDALRasterBandH) -> Self {
         RasterBand {
             c_rasterband,
             phantom: PhantomData,
@@ -310,7 +310,7 @@ impl<'a> RasterBand<'a> {
             if overview.is_null() {
                 return Err(_last_null_pointer_err("GDALGetOverview"));
             }
-            Ok(RasterBand::from_c_rasterband(&self.phantom, overview))
+            Ok(RasterBand::<'a>::from_c_rasterband(overview))
         }
     }
 }

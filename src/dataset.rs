@@ -205,13 +205,13 @@ impl Dataset {
         }
     }
 
-    pub fn rasterband(&self, band_index: isize) -> Result<RasterBand> {
+    pub fn rasterband<'a>(&'a self, band_index: isize) -> Result<RasterBand> {
         unsafe {
             let c_band = gdal_sys::GDALGetRasterBand(self.c_dataset, band_index as c_int);
             if c_band.is_null() {
                 return Err(_last_null_pointer_err("GDALGetRasterBand"));
             }
-            Ok(RasterBand::from_c_rasterband(self, c_band))
+            Ok(RasterBand::<'a>::from_c_rasterband(c_band))
         }
     }
 
